@@ -1,1 +1,177 @@
-# Flower-Store.
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌿🌿 Flowers Store 🌿🌿</title>
+
+    <link rel="icon" type="image/png" href="/photos/aiease_1762170959987.png">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link rel="stylesheet" href="store.css">
+</head>
+<body>
+
+    <header>
+        <h1>🌿 Flowers Store 🌿</h1>
+
+        <nav>
+            <img src="/photos/aiease_1762170959987.png" id="logo" alt="logo" height="70px">
+            <a href="#">Bosh sahifa</a>
+            <a href="#product">Mahsulotlar</a>
+            <a href="#reviews">Sharhlar</a>
+            <a href="#aloqa">Aloqa</a>
+
+            <p><b>☎ 91 657 43 27</b></p>
+            
+            <button id="userAuthBtn" class="cart-btn" title="Ro'yxatdan o'tish / Kirish">
+                👤
+            </button>
+            <button id="modeToggleBtn" class="cart-btn" title="Rejimni almashtirish">☀️</button>
+
+            <button id="openCartBtn" class="cart-btn">
+                🛒
+                <span id="cartCountBadge" class="cart-badge" style="display: none;">0</span>
+            </button>
+        </nav>
+    </header>
+
+    <div class="container" id="product">
+        <h2>Barcha gullar</h2>
+
+        <div class="search-container">
+            <select id="selectFlowerName">
+                <option value="">— Barcha gullar —</option>
+                </select>
+            
+            <input type="text" id="searchNameInput" placeholder="Gul nomini kiriting...">
+            <input type="number" id="searchPriceInput" placeholder="Maksimal narx..." min="0">
+        </div>
+
+        <div class="products" id="productsContainer"></div>
+    </div>
+
+    <section class="container" id="reviews">
+        <h2>Foydalanuvchilar Sharhlari va Baholari</h2>
+        <p class="instruction">Mahsulotga baho berganingizdan so'ng (yulduzchani bosish), shu yerda sharh yozish imkoniyati paydo bo'ladi.</p>
+        
+        <div id="reviewsContainer">
+            <p style="text-align: center; color: #777;">Sharhlar yuklanmoqda...</p>
+        </div>
+    </section>
+    
+    <div id="reviewModal" class="modal">
+        <div class="modal-content">
+            <span id="closeReviewBtn" class="close">×</span>
+            <h2 id="reviewProductName">Mahsulot nomi</h2>
+            
+            <form id="reviewForm">
+                <p>Sizning bahoingiz: <span id="modalReviewRating" class="rating-display"></span></p>
+
+                <input type="text" id="reviewUserName" placeholder="Ismingiz (Sharhda ko'rinadi)" required>
+                
+                <textarea 
+                    id="reviewComment" 
+                    placeholder="Qo'shimcha sharhingizni yozing (ixtiyoriy)" 
+                    rows="4"
+                ></textarea>
+                
+                <input type="hidden" id="reviewProductId">
+                <button type="submit">Sharhni yuborish</button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span id="closeProductBtn" class="close">×</span>
+            <h2 id="modalProductName">Gul nomi</h2>
+            <img id="modalProductImage" src="" alt="Gul rasmi">
+            <form id="productOptionsForm">
+                <label for="sizeSelect">Turini tanlang:</label>
+                <select id="sizeSelect" required></select>
+                <label for="quantityInput">Soni:</label>
+                <input type="number" id="quantityInput" value="1" min="1" required>
+                <p>Jami narx: <span id="currentProductPrice" class="price">0 so'm</span></p>
+                <button type="submit">Savatga qo'shish</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span id="closeCartBtn" class="close">×</span>
+            <h2>🛍 Sizning savatingiz</h2>
+            <div id="cartItems"></div>
+            <p><strong>Umumiy:</strong> <span id="totalPrice">0 so'm</span></p>
+
+            <form id="orderForm">
+                <input type="text" id="ism" placeholder="Ismingiz" required>
+                <input type="text" id="raqam" placeholder="Telefon raqamingiz" required>
+                <input type="text" id="manzil" placeholder="Manzil (Shahar/ko'cha)" required> 
+                
+                <textarea 
+                    id="sharh" 
+                    placeholder="Qo'shimcha sharh/izoh (Masalan, yetkazib berish vaqti, eshik kodi)" 
+                    rows="2"
+                ></textarea>
+
+                <textarea 
+                    id="xabar_matni" 
+                    placeholder="Gulga yoziladigan alohida xabar matni (Masalan: 'Tug'ilgan kuning bilan!')" 
+                    rows="2"
+                ></textarea>
+                
+                <button type="submit">✅ Buyurtma berish</button>
+                <p id="xabar"></p>
+            </form>
+        </div>
+    </div>
+    
+    <div id="authModal" class="modal">
+        <div class="modal-content auth-modal-content">
+            <span id="closeAuthBtn" class="close">×</span>
+            <h2 id="authTitle">Tizimga Kirish</h2>
+            
+            <form id="authForm">
+                <input type="email" id="authEmail" placeholder="Email manzil" required>
+                <input type="password" id="authPassword" placeholder="Parol" required>
+                
+                <input type="text" id="authName" placeholder="Ismingiz (Ro'yxatdan o'tish uchun)" style="display:none;">
+                
+                <button type="submit" id="authSubmitBtn">Kirish</button>
+            </form>
+            
+            <p class="toggle-auth">
+                <span id="toggleAuthText">Akkauntingiz yo'qmi?</span> 
+                <a href="#" id="toggleAuthMode">Ro'yxatdan o'tish</a>
+            </p>
+
+            <p id="authMessage" style="text-align: center; color: #ff3366; margin-top: 10px;"></p>
+        </div>
+    </div>
+    <div class="map-container">
+        <h3>📍 Bizning joylashuvimiz</h3>
+        <p>Quyidagi xaritada bizning do'konimiz manzilini ko'rishingiz mumkin.</p>
+        <iframe src="https://www.google.com/maps/embed?..."></iframe>
+    </div>
+
+    <div class="social-icons">
+        <a href="https://t.me/code_zone_uz"><i class="fab fa-telegram-plane"></i></a>
+        <a href="https://www.instagram.com/Sizning_Instagram_Profilingiz"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.youtube.com/channel/Sizning_YouTube_Kanal_IDingiz"><i class="fab fa-youtube"></i></a>
+        <a href="https://github.com/munisbekraimjonov33-spec/Munisbek.git"><i class="fab fa-github"></i></a>
+    </div>
+
+    <footer id="aloqa">
+        <p>© 2025 Flowers Store | Barcha huquqlar himoyalangan 🌿</p>
+    </footer>
+
+    <div id="custom-xabarnoma" class="xabarnoma">
+        <span>Xabar matni</span>
+    </div>
+    <script src="store.js"></script>
+</body>
+</html>
