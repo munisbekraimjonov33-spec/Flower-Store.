@@ -1,0 +1,45 @@
+[
+    {
+        "id": 1,
+        "name": "Atirgul guldastasi",
+        "image": "https://avatars.mds.yandex.net/get-altay/4234174/2a0000017c561596f4a3d1770503b27a3b9e/XL",
+        "variants": [
+            {"size": "Kichik", "price": 480000},
+            {"size": "O'rtacha", "price": 600000},
+            {"size": "Katta", "price": 750000},
+            {"size": "Premium", "price": 1050000}
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Lola guli",
+        "image": "https://suret.pics/uploads/posts/2023-09/1695228131_2-79.jpg",
+        "variants": [
+            {"size": "Kichik", "price": 180000},
+            {"size": "O'rtacha", "price": 280000},
+            {"size": "Katta", "price": 480000},
+            {"size": "Premium", "price": 780000}
+        ]
+    },
+    {
+        "id": 3,
+        "name": "Romashka savati",
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS84ykVxSLvd2Pl1FaQKOKZkQ933fARMqIyiQ&s",
+        "variants": [
+            {"size": "Kichik savat", "price": 300000},
+            {"size": "O'rtacha svat", "price": 450000},
+            {"size": "Katta savat", "price": 600000},
+            {"size": "Premium savat", "price": 1000000}
+        ]
+    },
+    {
+        "id": 4,
+        "name": "Gerbera guldastasi",
+        "image": "https://floristum.ru/uploads/products/632x632/350/p350_1719375984_43165.jpg",
+        "variants": [
+            {"size": "Kichik", "price": 150000},
+            {"size": "O'rtacha svat", "price": 350000},
+            {"size": "Katta svat", "price": 600000}
+        ]
+    }
+]
