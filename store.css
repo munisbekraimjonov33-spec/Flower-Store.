@@ -1,237 +1,232 @@
+/* ========================================================= */
 /* Umumiy reset va box-sizing */
+/* ========================================================= */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-    transition: background-color 0.3s, color 0.3s; /* Rejim almashtirish uchun silliq o'tish */
+    margin: 0; /* Barcha elementlarning tashqi bo'shliqlarini (margin) olib tashlash */
+    padding: 0; /* Barcha elementlarning ichki bo'shliqlarini (padding) olib tashlash */
+    box-sizing: border-box; /* Modelni o'lchash rejimini border-box ga o'rnatish */
+    font-family: Arial, sans-serif; /* Shriftni belgilash */
+    transition: background-color 0.3s, color 0.3s; /* Ranglar o'tishini silliq qilish */
 }
 
-/* Silliq skroll harakati */
+/* Silliq skroll */
 html {
-    scroll-behavior: smooth;
+    scroll-behavior: smooth; /* Havola orqali o'tishda silliq skroll effektini yoqish */
 }
 
+/* ========================================================= */
 /* ☀️ LIGHT MODE (Asosiy rejim) */
+/* ========================================================= */
 body {
-    background: #e2e2e2; 
-    color: #000000; 
-    padding-top: 70px; 
+    background: #e2e2e2; /* Yorug' rejim uchun fon rangi (och kulrang) */
+    color: #000000; /* Asosiy matn rangi (qora) */
+    padding-top: 90px; /* Navigatsiya uchun yuqorida joy qoldirish (fixed nav uchun) */
+    margin: 0;
 }
 
-/* 🌙 DARK MODE ranglar */
+/* ========================================================= */
+/* 🌙 DARK MODE */
+/* ========================================================= */
 body.dark-mode {
-    background: #121212; /* To'q qora fon */
-    color: #ffffff; /* Oqish matn */
+    background: #121212; /* Qora rejim uchun fon rangi (to'q kulrang) */
+    color: #ffffff; /* Matn rangi (oq) */
 }
-
 body.dark-mode h2,
 body.dark-mode h3 {
-    color: #e0e0e0; 
+    color: #e0e0e0; /* Sarlavhalar rangi (ochroq oq) */
 }
-
-/* 🌙 DARK MODE: Navigatsiya paneli uchun ranglar */
 body.dark-mode nav {
-    background: rgba(18, 18, 18, 0.9); 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
+    background: rgba(18, 18, 18, 0.9); /* Navigatsiya foni (shaffof to'q kulrang) */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Pastki chegara */
 }
-
-/* 🌙 DARK MODE: Navigatsiya havolalari matnini oq qilish */
 body.dark-mode nav a,
 body.dark-mode nav p {
-    color: #e0e0e0; 
+    color: #e0e0e0; /* Navigatsiya havolalari va telefon raqami rangi */
 }
-
 body.dark-mode nav a:hover {
-    color: #3cbe00; 
+    color: #3cbe00; /* Navigatsiya havolasi hover rangi (yashil) */
 }
-
-/* 🌙 DARK MODE: Savat tugmasi (modeToggleBtn ham shu klassda) */
 body.dark-mode .cart-btn {
-    background: #3c3c3c;
-    border-color: #555;
+    background: #3c3c3c; /* Savat tugmasi foni */
+    border-color: #555; /* Savat tugmasi chegara rangi */
     color: #e0e0e0;
 }
-
 body.dark-mode .container,
 body.dark-mode .map-container {
-    background: #1e1e1e; 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    background: #1e1e1e; /* Kontaynerlar foni */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Soyasi */
 }
-
 body.dark-mode .product {
-    background: #2c2c2c;
+    background: #2c2c2c; /* Mahsulot kartochkasi foni */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
-
 body.dark-mode .product p {
-    color: #90caf9; 
+    color: #90caf9; /* Narx matni rangi (och ko'k) */
 }
-
 body.dark-mode form input,
 body.dark-mode form select,
-body.dark-mode form textarea { 
-    background: #3c3c3c;
-    color: #e0e0e0;
-    border: 1px solid #555;
+body.dark-mode form textarea {
+    background: #3c3c3c; /* Forma maydonlari foni */
+    color: #e0e0e0; /* Forma matni rangi */
+    border: 1px solid #555; /* Forma maydonlari chegarasi */
 }
 body.dark-mode .cart-item {
-    border-bottom: 1px dashed #777;
+    border-bottom: 1px dashed #777; /* Savat elementlari pastki chizig'i */
 }
-
-/* Sharh kartasi stili uchun */
 .review-card {
-    background: #f9f9f9; 
+    background: #f9f9f9; /* Sharh kartochkasi foni (yorug' rejim) */
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 15px;
-    border-left: 5px solid #3cbe00; 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border-left: 5px solid #3cbe00; /* Chap tomon chegara (yashil chiziq) */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 body.dark-mode .review-card {
-    background: #3c3c3c;
-    border-left-color: #76ff03; 
+    background: #3c3c3c; /* Sharh kartochkasi foni (qora rejim) */
+    border-left-color: #76ff03;
     color: #e0e0e0;
 }
 
-
-/* ======================= */
-/* Header bo‘limi */
-/* ======================= */
+/* ========================================================= */
+/* HEADER */
+/* ========================================================= */
 header {
-    /* Rasmni o'zgartiring! */
-    background: url('https://www.urbanbrush.net/web/wp-content/uploads/edd/2018/06/web-20180619233336289967.png') center/cover no-repeat;
-    color: rgb(0, 39, 2);
-    padding: 200px 30px;
+    background: url('/photos/Copilot_20251111_174600.png') center/cover no-repeat; /* Fon rasmi */
+    color: rgb(0, 0, 0); /* Matn rangi */
+    height: 500px; /* Banner balandligi */
+    display: flex;
+    justify-content: center; /* Gorizontal markazlash */
+    align-items: center; /* Vertikal markazlash */
     text-align: center;
+    flex-direction: column;
+    margin: 0;
 }
 
-/* Navigatsiya menu */
+
+/* ========================================================= */
+/* NAVIGATSIYA */
+/* ========================================================= */
 nav {
-    margin-top: 10px;
-    position: fixed;
+    position: fixed; /* Ekran bo'yicha qotirilgan joylashuv */
     top: 0;
     left: 0;
     width: 100%;
-    backdrop-filter: blur(10px);
-    background: rgba(0, 153, 255, 0.7); 
-    border-bottom: 1px solid rgba(255,255,255,0.3);
-    z-index: 1000;
+    backdrop-filter: blur(10px); /* Fonni xiralashtirish */
+    background: rgba(0, 153, 255, 0.7); /* Shaffof ko'k fon */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    z-index: 1000; /* Boshqa elementlarning ustida turishi */
     display: flex;
-    justify-content: center;
-    gap: 25px;
+    justify-content: center; /* Markazga tekislash */
+    align-items: center;
+    gap: 25px; /* Elementlar orasidagi bo'shliq */
     padding: 15px 0;
 }
-
 .logo {
-    position: absolute;
+    position: absolute; /* Logo uchun mutlaq joylashuv (foydalanilmayotganga o'xshaydi, chunki HTMLda #logo ID ishlatilgan) */
     left: 20px;
     top: 10px;
-    width: 60px;
+    width: 50px;
     border-radius: 50%;
     border: 2px solid white;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 50px;
+    font-size: 24px;
 }
 
 nav a {
-    color: rgb(0, 39, 2);
+    color: rgb(0, 39, 2); /* Havola rangi (to'q yashil) */
     margin: 0 10px;
     text-decoration: none;
     font-weight: bold;
     font-size: 17px;
     transition: color 0.3s ease;
 }
-
 nav a:hover {
-    color: #ffffff;
+    color: #ffffff; /* Hoverda oq rang */
+}
+nav p {
+    color: #ffc107; /* Telefon raqami rangi (sariq) */
+    font-size: 18px;
+    font-weight: 900;
+    border: 2px solid #ffc107;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+body.dark-mode nav p {
+    color: #76ff03; /* Qora rejimda yashil rang */
+    border-color: #76ff03;
 }
 
-/* ======================= */
-/* Mahsulotlar (Products) */
-/* ======================= */
+/* ========================================================= */
+/* MAHSULOTLAR (PRODUCTS) */
+/* ========================================================= */
 .container {
-    max-width: 1200px;
+    max-width: 1200px; /* Maksimal kenglik */
     margin: auto;
     padding: 40px 20px;
 }
-
 h2 {
     text-align: center;
     margin-bottom: 20px;
     color: #000000;
 }
-
 .products {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+    display: grid; /* Grid joylashuvi */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Elementlarni avtomatik joylash (har birining minimal kengligi 250px) */
+    gap: 20px; /* Elementlar orasidagi bo'shliq */
 }
-
 .product {
     background: white;
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    transition: transform 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s; /* Hover effekti uchun o'tish */
     text-align: center;
     padding-bottom: 20px;
 }
-
 .product:hover {
-    transform: scale(1.05);
+    transform: scale(1.05); /* Hoverda kattalashish */
 }
-
 .product img {
     width: 100%;
     height: 200px;
-    object-fit: cover;
+    object-fit: cover; /* Rasmni to'ldirish */
 }
-
 .product h3 {
     margin: 10px 0;
 }
-
 .product p {
-    color: #143c92;
+    color: #143c92; /* Narx matni rangi (to'q ko'k) */
     font-weight: bold;
 }
-
-/* YULDUZCHA BAHOLASH USLUBI */
 .rating {
     margin: 10px 0;
     display: flex;
     justify-content: center;
-    gap: 5px; 
+    gap: 5px;
 }
-
 .rating i {
-    color: #ccc; 
+    color: #ccc; /* Baholanmagan yulduz rangi */
     cursor: pointer;
     font-size: 1.2em;
     transition: color 0.2s, transform 0.1s;
 }
-
 .rating i.rated {
-    color: #ffc107; 
+    color: #ffc107; /* Baholangan yulduz rangi (sariq) */
 }
-
 .rating i:hover {
     transform: scale(1.1);
 }
-
 body.dark-mode .rating i {
     color: #555;
 }
-
 body.dark-mode .rating i.rated {
     color: #ffd64e;
 }
-
 .product button {
-    background: #3cbe00;
+    background: #3cbe00; /* Savatga qo'shish tugmasi foni (yashil) */
     color: white;
     border: none;
     padding: 10px 20px;
@@ -239,17 +234,16 @@ body.dark-mode .rating i.rated {
     cursor: pointer;
     transition: 0.3s;
 }
-
 .product button:hover {
-    background: #119200;
+    background: #119200; /* Hoverda to'q yashil */
 }
 
-/* ======================= */
-/* Savat tugmasi (Cart Button) va Indikator (Badge) */
-/* ======================= */
+/* ========================================================= */
+/* SAVAT TUGMASI */
+/* ========================================================= */
 .cart-btn {
-    position: relative; 
-    background: #ffffff33;
+    position: relative;
+    background: #ffffff33; /* Shaffof oq fon */
     color: white;
     font-size: 20px;
     border: 2px solid white;
@@ -257,16 +251,15 @@ body.dark-mode .rating i.rated {
     padding: 10px;
     margin-left: 15px;
     cursor: pointer;
-    display: inline-flex; 
+    display: inline-flex;
     align-items: center;
     justify-content: center;
 }
-
 .cart-badge {
     position: absolute;
     top: -5px;
     right: -5px;
-    background-color: #ff3366; 
+    background-color: #ff3366; /* Belgining fon rangi (qizil) */
     color: white;
     border-radius: 50%;
     padding: 3px 7px;
@@ -274,58 +267,63 @@ body.dark-mode .rating i.rated {
     font-weight: bold;
     min-width: 20px;
     text-align: center;
-    border: 2px solid #e2e2e2; 
+    border: 2px solid #e2e2e2; /* Chegara */
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
-
 body.dark-mode .cart-badge {
     border: 2px solid #121212;
 }
 
-/* ======================= */
-/* Modal oynalar (Umumiy stil) */
-/* ======================= */
+/* ========================================================= */
+/* MODAL */
+/* ========================================================= */
 .modal {
-    display: none;
+    display: none; /* Standart holatda yashirin */
     position: fixed;
-    z-index: 1010; 
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.6);
+    z-index: 1010;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Yopiq fon (overlay) */
     justify-content: center;
     align-items: center;
 }
-
 .modal.active {
-    display: flex;
+    display: flex; /* Active klassi qo'shilganda modalni ko'rsatish */
 }
-
 .modal-content {
     padding: 25px;
     border-radius: 10px;
     width: 400px;
     position: relative;
-    animation: fadeIn 0.3s ease-out;
+    animation: fadeIn 0.3s ease-out; /* Animatsiya */
 }
-
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
 }
-
 .close {
     position: absolute;
     right: 15px;
     top: 10px;
     font-size: 24px;
     cursor: pointer;
+    color: #777;
+}
+.close:hover {
+    color: #000;
+}
+body.dark-mode .close {
+    color: #ccc;
+}
+body.dark-mode .close:hover {
+    color: #fff;
 }
 
-/* ======================= */
 /* 💖 Mahsulot Tanlash Modali */
-/* ======================= */
 #productModal .modal-content {
-    background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%); /* Oqdan kulranga gradient fon */
     width: 450px; 
     padding: 30px;
     border-radius: 15px;
@@ -342,7 +340,7 @@ body.dark-mode #productModal .modal-content {
     max-height: 250px;
     object-fit: cover;
     border-radius: 10px;
-    border: 3px solid #3cbe00; 
+    border: 3px solid #3cbe00; /* Yashil chegara */
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     margin-bottom: 15px;
     display: block;
@@ -371,27 +369,26 @@ body.dark-mode #productOptionsForm label {
 }
 
 #productOptionsForm button[type="submit"] {
-    background: #ff3366; 
+    background: #ff3366; /* Savatga qo'shish tugmasi foni (qizil) */
     font-size: 16px;
     padding: 12px;
     transition: background 0.3s, transform 0.2s;
+    width: 100%;
 }
 
 #productOptionsForm button[type="submit"]:hover {
     background: #cc0033;
-    transform: translateY(-2px);
+    transform: translateY(-2px); /* Hoverda yuqoriga siljish */
 }
 
-/* ======================= */
 /* 🛍 Savat Modali */
-/* ======================= */
 #cartModal .modal-content {
     background: #ffffff;
     width: 450px; 
     border-radius: 15px;
     padding: 30px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    border-top: 5px solid #1e40af; 
+    border-top: 5px solid #1e40af; /* Yuqori chegara (to'q ko'k) */
 }
 body.dark-mode #cartModal .modal-content {
     background: #2c2c2c;
@@ -410,14 +407,14 @@ body.dark-mode #cartModal h2 {
 
 #cartItems {
     max-height: 250px;
-    overflow-y: auto;
+    overflow-y: auto; /* Vertikal skroll */
     padding-right: 10px;
     margin-bottom: 15px;
 }
 
 .cart-item {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Tarkibni ikki chetga joylash */
     padding: 10px 0;
     border-bottom: 1px dashed #ccc;
     font-size: 15px;
@@ -425,7 +422,7 @@ body.dark-mode #cartModal h2 {
 }
 
 .cart-item button {
-    background: #ff3366;
+    background: #ff3366; /* O'chirish tugmasi foni */
     transition: background 0.2s;
     border: none;
     padding: 3px 6px;
@@ -447,19 +444,18 @@ body.dark-mode #cartModal h2 {
 }
 
 #orderForm button[type="submit"] {
-    background: #3cbe00; 
+    background: #3cbe00; /* Buyurtma berish tugmasi foni (yashil) */
     margin-top: 15px;
     font-size: 17px;
     padding: 14px;
+    width: 100%;
 }
 
 #orderForm button[type="submit"]:hover {
     background: #119200;
 }
 
-/* ======================= */
 /* Forma elementlari (Umumiy) */
-/* ======================= */
 form input,
 form textarea,
 form select { 
@@ -468,7 +464,7 @@ form select {
     padding: 10px;
     border-radius: 6px;
     border: 1px solid #ccc;
-    resize: vertical; 
+    resize: vertical; /* Faqat vertikal o'lchamini o'zgartirishga ruxsat berish */
 }
 
 /* Izlash qutisi */
@@ -476,15 +472,15 @@ form select {
     display: flex;
     gap: 15px;
     margin-bottom: 30px;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* Kichik ekranlarda pastga tushirish */
 }
 
 #searchNameInput, #searchPriceInput, #selectFlowerName { 
-    flex: 1;
+    flex: 1; /* Teng bo'shliqni egallash */
     min-width: 200px;
     padding: 12px 20px;
     border: 2px solid #ccc;
-    border-radius: 25px;
+    border-radius: 25px; /* Yumaloq burchaklar */
     font-size: 16px;
     transition: border-color 0.3s;
     background: white; 
@@ -500,14 +496,12 @@ body.dark-mode #selectFlowerName {
 }
 
 #searchNameInput:focus, #searchPriceInput:focus, #selectFlowerName:focus {
-    border-color: #3cbe00;
+    border-color: #3cbe00; /* Fokusda yashil chegara */
     outline: none;
     box-shadow: 0 0 8px rgba(60, 190, 0, 0.3);
 }
 
-/* ======================= */
 /* Xarita va Footer */
-/* ======================= */
 .map-container {
     max-width: 1200px;
     margin: 40px auto;
@@ -524,7 +518,7 @@ body.dark-mode .map-container {
 
 .map-container h3 {
     margin-bottom: 10px;
-    color: #119200;
+    color: #119200; /* Yashil sarlavha */
 }
 
 .map-container iframe {
@@ -537,8 +531,19 @@ body.dark-mode .map-container {
 .social-icons {
     display: flex; 
     justify-content: center; 
+    padding: 20px 0;
     margin-top: 20px;
+    border-top: 1px solid #ccc; 
+    border-bottom: 1px solid #ccc;
+    background: #f7f7f7;
 }
+
+body.dark-mode .social-icons {
+    background: #1e1e1e;
+    border-top-color: #333;
+    border-bottom-color: #333;
+}
+
 
 .social-icons a {
     margin: 0 15px;
@@ -548,44 +553,40 @@ body.dark-mode .map-container {
 }
 
 .social-icons .fa-telegram-plane {
-    color: #0088cc; 
+    color: #0088cc; /* Telegram rangi */
 }
 
 .social-icons .fa-instagram {
-    color: #c13584; 
+    color: #c13584; /* Instagram rangi */
 }
 
 .social-icons .fa-youtube {
-    color: #ff0000; 
+    color: #ff0000; /* YouTube rangi */
 }
 
 .social-icons a:hover {
-    transform: scale(1.15); 
+    transform: scale(1.15); /* Hoverda kattalashish */
 }
 
+/* FOOTER */
 footer {
-    background: #333;
-    color: white;
+    background: #1e3c1e; /* To'q yashil fon */
+    color: #f0f0f0; 
     text-align: center;
-    padding: 20px 0;
-    margin-top: 40px;
+    padding: 30px 20px; 
+    margin-top: 50px;
+    border-top: 4px solid #3cbe00; /* Yuqori yashil chiziq */
+    font-size: 14px;
 }
 
-/* ======================= */
-/* 👤 YANGI: AUTH MODAL STILI */
-/* ======================= */
-.auth-modal-content {
-    background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%); /* Och ko'k rang */
-    width: 380px !important;
-    padding: 35px !important;
-    border-radius: 12px !important;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-    border-top: 5px solid #1e40af;
+body.dark-mode footer {
+    background: #0d1a0d; 
+    border-top-color: #76ff03; 
 }
 
-body.dark-mode .auth-modal-content {
-    background: linear-gradient(135deg, #1e1e1e 0%, #2c2c2c 100%);
-    border-top: 5px solid #64b5f6;
+footer p {
+    margin: 0;
+    line-height: 1.6;
 }
 
 #authTitle {
@@ -603,7 +604,7 @@ body.dark-mode #authTitle {
 }
 
 #toggleAuthMode {
-    color: #ff3366;
+    color: #ff3366; /* Qizil rang */
     font-weight: bold;
     text-decoration: none;
     transition: color 0.2s;
@@ -616,9 +617,7 @@ body.dark-mode #toggleAuthMode:hover {
     color: #ff708e;
 }
 
-/* ======================= */
-/* 🔔 YANGI: CUSTOM XABARNOMA (Toast) Stili */
-/* ======================= */
+/* 🔔 CUSTOM XABARNOMA (Toast) Stili */
 .xabarnoma {
     position: fixed;
     top: 20px;
@@ -628,38 +627,37 @@ body.dark-mode #toggleAuthMode:hover {
     padding: 15px 30px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    z-index: 2000; /* Eng yuqorida tursin */
+    z-index: 2000; 
     opacity: 0;
-    visibility: hidden;
+    visibility: hidden; /* Standart holatda yashirin */
     transition: opacity 0.4s ease-out, transform 0.4s ease-out, visibility 0.4s;
-    transform: translateY(-50px);
+    transform: translateY(-50px); /* Yuqoriga siljish */
     font-weight: bold;
 }
 
 .xabarnoma.show {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    transform: translateY(0); /* Ko'rsatishda joyiga qaytish */
 }
 
 /* Error holatida rang */
-.xabarnoma[style*="cc0033"] {
-    background-color: #cc0033 !important;
+.xabarnoma[style*="#ff3366"] {
+    background-color: #ff3366 !important; /* Xato xabari uchun qizil fon */
 }
 
 body.dark-mode .xabarnoma {
     background-color: #2e7d32; 
 }
 
-
 /* ======================= */
 /* 📱 MEDIA QUERIES (Moslashuvchanlik) */
 /* ======================= */
 
-/* Planshetlar uchun */
+/* Planshetlar uchun (768px dan kichik) */
 @media (max-width: 768px) {
     nav {
-        flex-wrap: wrap; 
+        flex-wrap: wrap; /* Elementlarni pastga tushirish */
         gap: 10px;
         padding: 10px;
         justify-content: space-around; 
@@ -671,7 +669,7 @@ body.dark-mode .xabarnoma {
     }
     
     nav p {
-        display: none; 
+        display: none !important; /* Telefon raqamini yashirish */
     }
 
     .cart-btn {
@@ -681,7 +679,7 @@ body.dark-mode .xabarnoma {
     }
 
     .products {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Kichikroq minimal kenglik */
     }
     
     .container {
@@ -689,7 +687,7 @@ body.dark-mode .xabarnoma {
     }
     
     .search-container {
-        flex-direction: column; 
+        flex-direction: column; /* Vertikal joylashuv */
     }
 
     #searchNameInput, #searchPriceInput, #selectFlowerName {
@@ -701,22 +699,18 @@ body.dark-mode .xabarnoma {
     }
 }
 
-/* Telefonlar uchun */
+/* Telefonlar uchun (480px dan kichik) */
 @media (max-width: 480px) {
     nav a {
         font-size: 14px;
         margin: 0 2px;
     }
 
-    header {
-        padding: 100px 10px 50px;
-    }
-
     .modal-content,
     #productModal .modal-content,
     #cartModal .modal-content,
-    .auth-modal-content { /* YANGI */
-        width: 95% !important; 
+    .auth-modal-content { 
+        width: 95% !important; /* Modal kengligini 95% qilish */
         padding: 20px !important;
     }
     
