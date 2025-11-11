@@ -1,36 +1,40 @@
 // store.js - Gul do'koni uchun asosiy JavaScript logikasi
 
-// Global o'zgaruvchilar
-let products = [];      
-let cart = [];          
-let selectedProduct = null; 
-let reviews = [];       
-let currentUser = null; // Tizimga kirgan foydalanuvchi obyekti
+// ==========================================================
+// Global O'zgaruvchilar va Konfiguratsiyalar
+// ==========================================================
+let products = []; // JSON fayldan yuklanadigan mahsulotlar ro'yxati
+let cart = []; // Savatdagi mahsulotlar ro'yxati (obyektlar)
+let selectedProduct = null; // Hozirda modalda ko'rilayotgan mahsulot obyekti
+let reviews = []; // Foydalanuvchi sharhlari ro'yxati
+let currentUser = null; // Tizimga kirgan foydalanuvchi obyekti (null bo'lsa, kirmagan)
 
-// LocalStorage kalitlari
+// LocalStorage kalitlari - Ma'lumotlarni brauzerda saqlash uchun
 const CART_KEY = 'flowerStoreCart';
-const USER_KEY = 'currentUser'; 
+const USER_KEY = 'currentUser';
 const REVIEWS_KEY = 'productReviews';
-const RATING_PREFIX = 'productRating_';
+const RATING_PREFIX = 'productRating_'; // Har bir mahsulot bahosini saqlash uchun prefiks
 
 // 🚨 MUHIM: Bu token va CHAT_ID ni o'zingiznikiga o'zgartiring!
-const BOT_TOKEN = "7909031390:AAES4vyH19qUyK96o0Hp9TzRw1B-Bvkp6Jo"; 
-const CHAT_ID = "702646100";                                      
+const BOT_TOKEN = "7909031390:AAES4vyH19qUyK96o0Hp9TzRw1B-Bvkp6Jo"; // Telegram bot API tokeni
+const CHAT_ID = "702646100"; // Buyurtmalar yuboriladigan Telegram chat IDsi
 
 // ---
 // ==========================================================
 // 🔔 CUSTOM XABARNOMA (Toast) FUNKSIYASI
 // ==========================================================
+// Foydalanuvchiga qisqa vaqtli xabar ko'rsatish uchun
 function customXabarnoma(xabar, isError = false) {
     const xabarnomaEl = document.getElementById('custom-xabarnoma');
-    if (!xabarnomaEl) return;
+    if (!xabarnomaEl) return; // Agar element topilmasa, funksiyani to'xtatish
 
     const span = xabarnomaEl.querySelector('span');
-    span.textContent = xabar;
+    span.textContent = xabar; // Xabar matnini o'rnatish
 
-    xabarnomaEl.style.backgroundColor = isError ? '#ff3366' : '#3cbe00'; // Xato bo'lsa qizil
+    // Xato xabari bo'lsa qizil, muvaffaqiyatli bo'lsa yashil fon
+    xabarnomaEl.style.backgroundColor = isError ? '#ff3366' : '#3cbe00';
 
-    // Ko'rsatish
+    // Ko'rsatish uchun CSS klassini qo'shish
     xabarnomaEl.classList.add('show');
     
     // 3 soniyadan keyin yashirish
@@ -43,11 +47,13 @@ function customXabarnoma(xabar, isError = false) {
 // ==========================================================
 // 💾 SAVATNI SAQLASH/YUKLASH FUNKSIYALARI (Persistence)
 // ==========================================================
+// Savat ma'lumotlarini LocalStorage'dan yuklash
 function loadCart() {
     const storedCart = localStorage.getItem(CART_KEY);
-    cart = storedCart ? JSON.parse(storedCart) : [];
+    cart = storedCart ? JSON.parse(storedCart) : []; // Agar bo'lsa, yuklash, bo'lmasa bo'sh massiv
 }
 
+// Savat ma'lumotlarini LocalStorage'ga saqlash
 function saveCart() {
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
 }
@@ -59,9 +65,9 @@ function saveCart() {
 // LocalStorage'dan foydalanuvchini yuklash
 function loadUser() {
     const storedUser = localStorage.getItem(USER_KEY);
-    // Hozirda faqat ism va statusni saqlaymiz, haqiqiy parollarni emas!
+    // Haqiqiy parollarni emas, faqat foydalanuvchi statusi va ismini yuklaymiz
     currentUser = storedUser ? JSON.parse(storedUser) : null;
-    updateUserAuthUI();
+    updateUserAuthUI(); // UI ni foydalanuvchi holatiga mos ravishda yangilash
 }
 
 // Foydalanuvchini saqlash (Kirish/Ro'yxatdan o'tish muvaffaqiyatli bo'lsa)
@@ -76,22 +82,22 @@ function updateUserAuthUI() {
     const authBtn = document.getElementById("userAuthBtn");
     
     if (currentUser) {
-        // Tizimga kirgan holat
+        // Tizimga kirgan holat: Tugma matnini ism bilan almashtirish va chiqish funksiyasini biriktirish
         const userName = currentUser.name || 'User';
-        authBtn.innerHTML = `👤 ${userName.split(' ')[0]}`; // Birinchi ismni ko'rsatish
+        authBtn.innerHTML = `👤 ${userName.split(' ')[0]}`; 
         authBtn.title = "Tizimdan chiqish";
-        authBtn.onclick = chiqish;
+        authBtn.onclick = chiqish; // Bosilganda chiqish funksiyasi ishlaydi
     } else {
-        // Tizimga kirmagan holat
+        // Tizimga kirmagan holat: Standart ikonka va kirish funksiyasini biriktirish
         authBtn.innerHTML = `👤`;
         authBtn.title = "Ro'yxatdan o'tish / Kirish";
-        authBtn.onclick = openAuthModal;
+        authBtn.onclick = openAuthModal; // Bosilganda modal ochiladi
     }
 }
 
-// Chiqish
+// Chiqish (Logout) funksiyasi
 function chiqish() {
-    localStorage.removeItem(USER_KEY);
+    localStorage.removeItem(USER_KEY); // LocalStorage dan foydalanuvchini o'chirish
     currentUser = null;
     updateUserAuthUI();
     customXabarnoma('Xayr, tizimdan chiqdingiz.');
@@ -100,14 +106,14 @@ function chiqish() {
 // Kirish/Ro'yxatdan o'tish modalini ochish
 function openAuthModal() {
     document.getElementById("authModal").classList.add("active");
-    // Forma rejimini "Kirish" holatiga qaytarish
+    // Modal ochilganda uni doimo "Kirish" rejimiga o'rnatish
     document.getElementById("authTitle").textContent = "Tizimga Kirish";
     document.getElementById("authSubmitBtn").textContent = "Kirish";
-    document.getElementById("authName").style.display = 'none';
+    document.getElementById("authName").style.display = 'none'; // Ism maydonini yashirish
     document.getElementById("toggleAuthText").textContent = "Akkauntingiz yo'qmi?";
     document.getElementById("toggleAuthMode").textContent = "Ro'yxatdan o'tish";
     document.getElementById("authMessage").textContent = ""; 
-    document.getElementById("authForm").reset(); 
+    document.getElementById("authForm").reset(); // Formani tozalash
 }
 
 // Ro'yxatdan o'tish/Kirish modalini yopish
@@ -131,7 +137,7 @@ function toggleAuthMode(e) {
         // Ro'yxatdan o'tish rejimiga o'tish
         document.getElementById("authTitle").textContent = "Ro'yxatdan O'tish";
         document.getElementById("authSubmitBtn").textContent = "Ro'yxatdan O'tish";
-        document.getElementById("authName").style.display = 'block';
+        document.getElementById("authName").style.display = 'block'; // Ism maydonini ko'rsatish
         document.getElementById("toggleAuthText").textContent = "Akkauntingiz bormi?";
         document.getElementById("toggleAuthMode").textContent = "Tizimga kirish";
     }
@@ -146,30 +152,27 @@ function handleAuthSubmit(e) {
     const password = document.getElementById("authPassword").value.trim();
     const nameInput = document.getElementById("authName");
     const messageEl = document.getElementById("authMessage");
-    const isRegisterMode = nameInput.style.display !== 'none';
+    const isRegisterMode = nameInput.style.display !== 'none'; // Ro'yxatdan o'tish rejimidami?
 
     messageEl.textContent = "";
 
     if (isRegisterMode) {
-        // --- Ro'yxatdan O'tish Mantig'i ---
+        // --- Ro'yxatdan O'tish Mantig'i (Demo uchun) ---
         const name = nameInput.value.trim();
         if (name.length < 3) {
             messageEl.textContent = "Ismingiz kamida 3 ta belgidan iborat bo'lishi kerak.";
             return;
         }
         
-        // Haqiqiy loyihada bu yerda ma'lumotlar bazasiga yoziladi.
-        // Hozirgi kunda shartli ro'yxatdan o'tish.
+        // Haqiqiy loyihada serverga yuboriladi
         const newUser = { email, password, name, status: 'loggedin' };
         saveUser(newUser);
         closeAuthModal();
         customXabarnoma(`✅ Rahmat, ${name}! Muvaffaqiyatli ro'yxatdan o'tdingiz.`);
         
     } else {
-        // --- Tizimga Kirish Mantig'i ---
-        // Haqiqiy loyihada ma'lumotlar bazasidan tekshiriladi.
-        // Hozirda shartli kirish (Parol: 123456)
-        
+        // --- Tizimga Kirish Mantig'i (Demo uchun) ---
+        // Shartli kirish tekshiruvi (Parol: 123456)
         if (email && password === '123456') {
             const tempUser = { email, name: email.split('@')[0], status: 'loggedin' };
             saveUser(tempUser);
@@ -220,15 +223,15 @@ function toggleDarkMode() {
 // 'products.json' faylidan mahsulotlar ro'yxatini asinxron yuklaydi
 async function loadProducts() {
     try {
-        const response = await fetch('products.json'); 
+        const response = await fetch('products.json'); // JSON faylni yuklash
         if (!response.ok) throw new Error("JSON fayl topilmadi");
-        products = await response.json(); 
+        products = await response.json(); // Ma'lumotlarni massivga o'zlashtirish
         
-        loadRatings(); 
-        loadReviews(); 
-        populateFlowerSelect(); 
-        displayProducts(); 
-        displayReviews(false); 
+        loadRatings(); // Yuklangan mahsulotlarga avvalgi baholarni qo'shish
+        loadReviews(); // Sharhlarni yuklash
+        populateFlowerSelect(); // Filtrlash uchun gul nomlarini qo'shish
+        displayProducts(); // Mahsulotlarni sahifada ko'rsatish
+        displayReviews(false); // Sharhlarni ko'rsatish
     } catch (err) {
         console.error(err);
         document.getElementById("productsContainer").innerHTML = "<p>Xatolik: Mahsulotlar yuklanmadi</p>";
@@ -238,9 +241,10 @@ async function loadProducts() {
 // 🌸 Gul nomlarini filtrlash uchun select qutisiga (tanlash) joylash
 function populateFlowerSelect() {
     const select = document.getElementById("selectFlowerName");
-    const flowerNames = [...new Set(products.map(p => p.name))].sort();
+    // Mahsulot nomlaridan takrorlanmaydigan ro'yxatni olish va saralash
+    const flowerNames = [...new Set(products.map(p => p.name))].sort(); 
     
-    select.innerHTML = '<option value="">— Barcha gullar —</option>';
+    select.innerHTML = '<option value="">— Barcha gullar —</option>'; // Boshlang'ich qiymat
     flowerNames.forEach(name => {
         const option = document.createElement("option");
         option.value = name;
@@ -257,7 +261,7 @@ function populateFlowerSelect() {
 function loadRatings() {
     products.forEach(p => {
         const r = localStorage.getItem(RATING_PREFIX + p.id);
-        p.rating = r ? parseInt(r) : 0; 
+        p.rating = r ? parseInt(r) : 0; // Agar baho bo'lsa, yuklash, bo'lmasa 0
     });
 }
 
@@ -266,8 +270,8 @@ function saveRating(id, rating) {
     localStorage.setItem(RATING_PREFIX + id, rating);
     const product = products.find(p => p.id === id);
     if (product) product.rating = rating;
-    updateProductCardRating(id, rating); 
-    openReviewModal(id, rating); 
+    updateProductCardRating(id, rating); // Kartochka UI ni yangilash
+    openReviewModal(id, rating); // Sharh qoldirish modalini ochish
 }
 
 // Mahsulot kartasidagi yulduzcha ko'rinishini yangilaydi
@@ -275,6 +279,7 @@ function updateProductCardRating(id, newRating) {
     const container = document.querySelector(`.rating[data-product-id="${id}"]`);
     if (container) {
         container.querySelectorAll('i').forEach((star, i) => {
+            // Berilgan baho (newRating) gacha bo'lgan yulduzlarni rangli qilish
             if (i < newRating) star.classList.add('rated');
             else star.classList.remove('rated');
         });
@@ -283,9 +288,9 @@ function updateProductCardRating(id, newRating) {
 
 // Yulduzchani bosish hodisasini boshqarish
 function handleRatingClick(e) {
-    if (!e.target.classList.contains('fa-star')) return; 
-    const rating = parseInt(e.target.dataset.value); 
-    const productId = parseInt(e.target.closest('.rating').dataset.productId);
+    if (!e.target.classList.contains('fa-star')) return; // Faqat yulduz bosilsa
+    const rating = parseInt(e.target.dataset.value); // Bosilgan yulduz qiymati
+    const productId = parseInt(e.target.closest('.rating').dataset.productId); // Mahsulot IDsi
     saveRating(productId, rating);
 }
 
@@ -303,7 +308,7 @@ function loadReviews() {
 function saveReview(review) {
     reviews.push(review);
     localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
-    displayReviews(); 
+    displayReviews(); // Sharhlar ro'yxatini yangilash
 }
 
 // Sharh qoldirish modalini ochadi
@@ -312,12 +317,14 @@ function openReviewModal(id, rating) {
     if (!p) return;
 
     document.getElementById("reviewProductName").textContent = `Sharhingiz: ${p.name}`;
-    document.getElementById("reviewProductId").value = id;
+    document.getElementById("reviewProductId").value = id; // Mahsulot ID sini yashirin maydonga yozish
 
     const stars = document.getElementById("modalReviewRating");
     stars.innerHTML = "";
+    // Baholangan yulduzlarni modalda ko'rsatish
     for (let i = 0; i < rating; i++) stars.innerHTML += '<i class="fa-solid fa-star rated"></i>';
 
+    // Avvalgi ism yoki tizimga kirgan foydalanuvchi ismini yuklash
     document.getElementById("reviewUserName").value = localStorage.getItem('lastUserName') || (currentUser ? currentUser.name : '');
     document.getElementById("reviewComment").value = '';
     document.getElementById("reviewModal").classList.add("active");
@@ -338,8 +345,8 @@ function displayReviews(showAll = false) {
         return;
     }
 
-    const reversed = reviews.slice().reverse(); 
-    const toShow = showAll ? reversed : reversed.slice(0, 10); 
+    const reversed = reviews.slice().reverse(); // Eng so'nggi sharhlarni birinchi ko'rsatish
+    const toShow = showAll ? reversed : reversed.slice(0, 10); // Hammasini yoki birinchi 10 tasini ko'rsatish
 
     toShow.forEach(r => {
         const p = products.find(p => p.id === r.productId);
@@ -359,13 +366,15 @@ function displayReviews(showAll = false) {
         container.appendChild(div);
     });
 
+    // "Barcha sharhlarni ko‘rish" tugmasini yaratish/yangilash
     const btnDiv = document.createElement('div');
     btnDiv.style.textAlign = 'center';
     btnDiv.style.marginTop = '20px';
 
     const btn = document.createElement('button');
-    btn.textContent = showAll ? "🔙 Eng yangi 10 tasini ko‘rsatish" : `📖 Barcha ${reviews.length} ta sharhni ko‘rish`;
+    btn.textContent = showAll ? "🔙 Eng yangi 10 tasini ko‘rsatish" : `📖 Barcha sharhlarni ko‘rish`;
     
+    // Tugma bosilganda ko'rsatish rejimini almashtirish
     btn.addEventListener('click', () => displayReviews(!showAll)); 
     container.appendChild(btnDiv);
     btnDiv.appendChild(btn);
@@ -380,7 +389,7 @@ function handleReviewSubmit(e) {
     const p = products.find(p => p.id === id);
     if (!p) return;
 
-    const rating = p.rating; 
+    const rating = p.rating; // Mahsulotning avvalgi bahosini olish (yulduzchani bosganda saqlangan)
 
     const newReview = {
         productId: id,
@@ -391,15 +400,16 @@ function handleReviewSubmit(e) {
     };
 
     saveReview(newReview);
-    localStorage.setItem('lastUserName', name); 
+    localStorage.setItem('lastUserName', name); // Keyingi safar foydalanish uchun ismni saqlash
     closeReviewModal();
-    customXabarnoma("✅ Sharhingiz saqlandi!"); // customXabarnoma bilan almashtirildi
+    customXabarnoma("✅ Sharhingiz saqlandi!");
 }
 
 // ---
 // ==========================================================
 // 🛒 MAHSULOTLARNI CHIQARISH / QIDIRUV / FILTRLASH
 // ==========================================================
+// Mahsulot kartochkalarini sahifada ko'rsatish
 function displayProducts(filtered = products) {
     const container = document.getElementById("productsContainer");
     container.innerHTML = "";
@@ -410,10 +420,13 @@ function displayProducts(filtered = products) {
     }
 
     filtered.forEach(p => {
-        const minPrice = p.variants.reduce((m, v) => Math.min(m, v.price), Infinity);
+        // Eng arzon variant narxini hisoblash
+        const minPrice = p.variants.reduce((m, v) => Math.min(m, v.price), Infinity); 
         
+        // Mahsulotning yulduzli bahosini yaratish
         let ratingHtml = `<div class="rating" data-product-id="${p.id}">`;
         for (let i = 1; i <= 5; i++) {
+            // Baholangan yulduzlarni rangli qilish
             ratingHtml += `<i class="fa-solid fa-star ${i <= (p.rating || 0) ? 'rated' : ''}" data-value="${i}"></i>`;
         }
         ratingHtml += "</div>";
@@ -431,37 +444,45 @@ function displayProducts(filtered = products) {
     });
 }
 
+// Filtrlash va qidirish logikasi
 function searchProducts() {
     const selectName = document.getElementById("selectFlowerName").value.trim();
     const nameTerm = document.getElementById("searchNameInput").value.toLowerCase().trim();
     const priceTerm = document.getElementById("searchPriceInput").value.trim();
+    // Maksimal narxni o'rnatish
     const maxPrice = priceTerm === "" ? Infinity : parseInt(priceTerm) || Infinity;
 
     const filtered = products.filter(p => {
-        const matchSelect = selectName === "" || p.name === selectName;
-        const matchName = p.name.toLowerCase().includes(nameTerm);
+        // Tanlangan nom bo'yicha filtrlash
+        const matchSelect = selectName === "" || p.name === selectName; 
+        // Qidiruv maydonidagi nom bo'yicha filtrlash
+        const matchName = p.name.toLowerCase().includes(nameTerm); 
+        // Eng arzon variant narxini hisoblash
         const minPrice = p.variants.reduce((m, v) => Math.min(m, v.price), Infinity);
+        // Maksimal narx bo'yicha filtrlash
         const matchPrice = minPrice <= maxPrice;
         
         return matchSelect && matchName && matchPrice;
     });
 
-    displayProducts(filtered); 
+    displayProducts(filtered); // Filtrlangan mahsulotlarni ko'rsatish
 }
 
 // ---
 // ==========================================================
 // 🛍 SAVAT FUNKSIONALI
 // ==========================================================
+// Savatdagi mahsulotlar sonini belgini (badge) yangilash
 function updateCartBadge() {
     const badge = document.getElementById("cartCountBadge");
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     badge.textContent = totalItems;
-    badge.style.display = totalItems > 0 ? 'flex' : 'none'; 
+    badge.style.display = totalItems > 0 ? 'flex' : 'none'; // Nol bo'lsa yashirish
 }
 
+// Mahsulot tanlash modalini ochish
 function openProductModal(id) {
-    selectedProduct = products.find(p => p.id === id); 
+    selectedProduct = products.find(p => p.id === id); // Tanlangan mahsulotni topish
     if (!selectedProduct) return;
 
     document.getElementById("modalProductName").textContent = selectedProduct.name;
@@ -469,6 +490,7 @@ function openProductModal(id) {
 
     const select = document.getElementById("sizeSelect");
     select.innerHTML = "";
+    // Mahsulot variantlarini (turlarini) modalga joylash
     selectedProduct.variants.forEach(v => {
         const opt = document.createElement("option");
         opt.value = v.size;
@@ -478,19 +500,21 @@ function openProductModal(id) {
     });
 
     document.getElementById("quantityInput").value = 1; 
-    updateModalPrice(); 
+    updateModalPrice(); // Narxni yangilash
     document.getElementById("productModal").classList.add("active");
 }
 
+// Mahsulot tanlash modalini yopish
 function closeProductModal() {
     document.getElementById("productModal").classList.remove("active");
 }
 
+// Modal ichidagi tanlangan variant va songa qarab narxni yangilash
 function updateModalPrice() {
     const select = document.getElementById("sizeSelect");
     const input = document.getElementById("quantityInput");
-    const price = Number(select.options[select.selectedIndex].dataset.price);
-    const qty = parseInt(input.value);
+    const price = Number(select.options[select.selectedIndex].dataset.price); // Tanlangan variant narxi
+    const qty = parseInt(input.value); // Kiritilgan soni
     document.getElementById("currentProductPrice").textContent = (price * qty).toLocaleString() + " so'm";
 }
 
@@ -498,24 +522,24 @@ function updateModalPrice() {
 function addToCart(id, size, qty, price) {
     const p = products.find(p => p.id === id);
     if (!p) return;
-    const uid = `${id}-${size}`; 
+    const uid = `${id}-${size}`; // Mahsulot va variant bo'yicha unikal ID
     const found = cart.find(i => i.uniqueId === uid);
 
-    if (found) found.quantity += qty; 
-    else cart.push({ uniqueId: uid, id, name: `${p.name} (${size})`, price, quantity: qty }); 
+    if (found) found.quantity += qty; // Agar avval mavjud bo'lsa, sonini oshirish
+    else cart.push({ uniqueId: uid, id, name: `${p.name} (${size})`, price, quantity: qty }); // Yangi mahsulot qo'shish
 
     saveCart(); 
     displayCart();
     updateCartBadge(); 
     closeProductModal();
-    customXabarnoma(`✅ ${p.name} savatga qo‘shildi`); // customXabarnoma bilan almashtirildi
+    customXabarnoma(`✅ ${p.name} savatga qo‘shildi`); 
 }
 
+// Savat tarkibini modalda ko'rsatish
 function displayCart() {
     const container = document.getElementById("cartItems");
     container.innerHTML = "";
-    const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
-
+    const total = cart.reduce((s, i) => s + i.price * i.quantity, 0); // Umumiy narx
     updateCartBadge(); 
     
     if (cart.length === 0) {
@@ -537,30 +561,34 @@ function displayCart() {
     document.getElementById("totalPrice").textContent = total.toLocaleString() + " so'm";
 }
 
+// Savatdan mahsulotni o'chirish
 function removeFromCart(uid) {
-    cart = cart.filter(i => i.uniqueId !== uid);
+    cart = cart.filter(i => i.uniqueId !== uid); // O'chiriladigan elementni tashlab, yangi massiv yaratish
     saveCart(); 
     displayCart();
     updateCartBadge(); 
-    customXabarnoma("🗑 Mahsulot o'chirildi", true); // O'chirish xabari
+    customXabarnoma("🗑 Mahsulot o'chirildi", true); 
 }
 
+// Savat modalini ochish
 function openCart() {
     document.getElementById("cartModal").classList.add("active");
 }
 
+// Savat modalini yopish
 function closeCart() {
     document.getElementById("cartModal").classList.remove("active");
-    document.getElementById("xabar").textContent = ""; 
+    document.getElementById("xabar").textContent = ""; // Xabar maydonini tozalash
 }
 
 // ---
 // ==========================================================
 // ✉️ TELEGRAMGA BUYURTMA YUBORISH
 // ==========================================================
+// Telegram Bot orqali buyurtma ma'lumotlarini yuborish
 function sendOrderToTelegram(xabar) {
     document.getElementById("xabar").textContent = "Yuborilmoqda...";
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, { // Telegram API ga POST so'rov
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ chat_id: CHAT_ID, text: xabar, parse_mode: "HTML" })
@@ -574,13 +602,14 @@ function sendOrderToTelegram(xabar) {
             saveCart(); 
             displayCart();
             updateCartBadge(); 
-            customXabarnoma("🎉 Buyurtmangiz muvaffaqiyatli qabul qilindi!"); // Muvaffaqiyat xabari
+            customXabarnoma("🎉 Buyurtmangiz muvaffaqiyatli qabul qilindi!");
         } else {
             document.getElementById("xabar").textContent = "❌ Xatolik yuz berdi.";
             customXabarnoma("❌ Buyurtmani yuborishda xatolik yuz berdi.", true);
         }
     })
     .catch(() => {
+        // Tarmoq xatosi (internet yo'qligi va h.k.)
         document.getElementById("xabar").textContent = "❌ Internet xatosi.";
         customXabarnoma("❌ Internetga ulanishda xato.", true);
     });
@@ -591,40 +620,42 @@ function sendOrderToTelegram(xabar) {
 // 🧩 EVENTLAR (Sayt yuklanganda ishga tushadi)
 // ==========================================================
 document.addEventListener("DOMContentLoaded", () => {
-    // Boshlang'ich funksiyalarni ishga tushirish
-    loadInitialMode();
+    // Boshlang'ich funksiyalarni ishga tushirish (tartib muhim)
+    loadInitialMode(); // Rejimni yuklash
     loadUser(); // Foydalanuvchini yuklash
-    loadProducts();
+    loadProducts(); // Mahsulotlarni yuklash (bu boshqa yuklashlarni ham chaqiradi)
     
-    loadCart(); 
-    displayCart();
-    updateCartBadge(); 
+    loadCart(); // Savatni yuklash
+    displayCart(); // Savat tarkibini ko'rsatish
+    updateCartBadge(); // Savat belgisini yangilash
 
-    // Filtrlash eventlari
+    // Filtrlash eventlari - Har qanday o'zgarishda qidiruvni ishga tushirish
     document.getElementById("selectFlowerName").addEventListener("change", searchProducts);
     document.getElementById("searchNameInput").addEventListener("input", searchProducts);
     document.getElementById("searchPriceInput").addEventListener("input", searchProducts);
 
-    // Rejim almashtirish
+    // Rejim almashtirish tugmasi
     document.getElementById("modeToggleBtn").addEventListener("click", toggleDarkMode);
 
-    // Mahsulotlar konteyneridagi tugmalarni va yulduzchalarni boshqarish
+    // Mahsulotlar konteyneridagi tugmalarni va yulduzchalarni boshqarish (Event Delegation)
     document.getElementById("productsContainer").addEventListener("click", e => {
         if (e.target.classList.contains("select-options-btn")) {
+            // Tanlash tugmasini bosganda mahsulot modalini ochish
             openProductModal(parseInt(e.target.dataset.id)); 
         } else if (e.target.classList.contains("fa-star")) {
+            // Yulduzchani bosganda baholash funksiyasini chaqirish
             handleRatingClick(e); 
         }
     });
 
-    // Savat ichidagi O'chirish tugmasini boshqarish
+    // Savat ichidagi O'chirish tugmasini boshqarish (Event Delegation)
     document.getElementById("cartItems").addEventListener("click", e => {
         if (e.target.classList.contains("remove-btn")) {
             removeFromCart(e.target.dataset.id);
         }
     });
 
-    // Modal ichida narxni avtomatik yangilash
+    // Modal ichida variant yoki soni o'zgarganda narxni avtomatik yangilash
     document.getElementById("sizeSelect").addEventListener("change", updateModalPrice);
     document.getElementById("quantityInput").addEventListener("input", updateModalPrice);
     
@@ -641,20 +672,19 @@ document.addEventListener("DOMContentLoaded", () => {
     // 👤 YANGI: AUTH EVENTLARI
     // ---------------------------------------------
     document.getElementById("userAuthBtn").addEventListener("click", () => {
-        // Funksiya chaqiruvi loadUser() ichida updateUserAuthUI() orqali belgilangan.
-        // openAuthModal yoki chiqish() ishga tushadi.
+        // Bu tugma funksiyasi loadUser() ichida dinamik ravishda belgilanadi (openAuthModal yoki chiqish)
     });
     document.getElementById("closeAuthBtn").addEventListener("click", closeAuthModal);
-    document.getElementById("toggleAuthMode").addEventListener("click", toggleAuthMode);
-    document.getElementById("authForm").addEventListener("submit", handleAuthSubmit);
+    document.getElementById("toggleAuthMode").addEventListener("click", toggleAuthMode); // Kirish/Ro'yxatdan o'tishni almashtirish
+    document.getElementById("authForm").addEventListener("submit", handleAuthSubmit); // Forma jo'natish
     // ---------------------------------------------
     
-    // Modalning tashqarisini bosganda yopish
+    // Modalning tashqarisini (background) bosganda yopish
     window.addEventListener("click", e => {
         if (e.target.id === "cartModal") closeCart();
         if (e.target.id === "productModal") closeProductModal();
         if (e.target.id === "reviewModal") closeReviewModal();
-        if (e.target.id === "authModal") closeAuthModal(); // YANGI: Auth modalni yopish
+        if (e.target.id === "authModal") closeAuthModal(); 
     });
 
     // Mahsulotni savatga qo'shish formasini boshqarish
@@ -664,6 +694,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const size = select.value;
         const qty = parseInt(document.getElementById("quantityInput").value);
         const price = Number(select.options[select.selectedIndex].dataset.price);
+        // Mahsulotni savatga qo'shish
         if (qty > 0) addToCart(selectedProduct.id, size, qty, price);
     });
 
@@ -672,16 +703,18 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         if (cart.length === 0) {
             document.getElementById("xabar").textContent = "Savat bo‘sh!";
-            customXabarnoma("Savatingiz bo'sh!", true); // Xabarnoma
+            customXabarnoma("Savatingiz bo'sh!", true);
             return;
         }
 
+        // Forma maydonlaridan ma'lumotlarni olish
         const ism = document.getElementById("ism").value.trim();
         const raqam = document.getElementById("raqam").value.trim();
         const manzil = document.getElementById("manzil").value.trim();
         const sharh = document.getElementById("sharh").value.trim();
         const xabarMatni = document.getElementById("xabar_matni").value.trim();
 
+        // Telegramga yuborish uchun xabar matnini shakllantirish (HTML formatida)
         let xabar = `🛍 <b>Yangi buyurtma!</b>\n👤 <b>${ism}</b>\n📞 ${raqam}\n📍 ${manzil}\n\n`;
 
         if (sharh) xabar += `📝 Izoh: ${sharh}\n`;
@@ -695,6 +728,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
         xabar += `\n💰 Umumiy: <b>${total.toLocaleString()} so'm</b>`;
 
-        sendOrderToTelegram(xabar); 
+        sendOrderToTelegram(xabar); // Telegramga yuborish
     });
 });
